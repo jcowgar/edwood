@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"unicode/utf8"
+	"regexp"
 
 	"9fans.net/go/acme"
 	"github.com/creack/pty"
@@ -448,6 +449,8 @@ func (w *winWin) stdoutproc() {
 			input = dropcrnl(input)
 
 			input = dropcr(input)
+			
+			input = dropansi(input)
 
 			input = squashnulls(input)
 
@@ -547,6 +550,14 @@ func dropcrnl(p []rune) []rune {
 func squashnulls(p []rune) []rune {
 	s := string(p)
 	return []rune(strings.Replace(s, "\x00", "", -1))
+}
+
+var ansiRegex = regexp.MustCompile(`\x1b\[[0-9;]*[mGKHF]|\x1b\][0-9;]*m|\x1b\[\d+;\d+;\d+;\d+m|\x1b\[\d+;\d;[\d;]+m|\x1b\[[\d;]+m`)
+
+func dropansi(p []rune) []rune {
+    s := string(p)
+    clean := ansiRegex.ReplaceAllString(s, "")
+    return []rune(clean)
 }
 
 func dropcr(p []rune) []rune {
