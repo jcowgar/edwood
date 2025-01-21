@@ -552,7 +552,7 @@ func squashnulls(p []rune) []rune {
 	return []rune(strings.Replace(s, "\x00", "", -1))
 }
 
-var ansiRegex = regexp.MustCompile(`\x1b\[[0-9;]*[mGKHF]|\x1b\][0-9;]*m|\x1b\[\d+;\d+;\d+;\d+m|\x1b\[\d+;\d;[\d;]+m|\x1b\[[\d;]+m`)
+var ansiRegex = regexp.MustCompile(`\x1b\[[0-9;]*[mGKHF]|\x1b\][0-9;]*m|\x1b\[\d+;\d+;\d+;\d+m|\x1b\[\d+;\d;[\d;]+m|\x1b\[[\d;]+m|\x1b\[\?2004[hl]`)
 
 func dropansi(p []rune) []rune {
     s := string(p)
